@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-// Find the view pager that will allow the user to swipe between fragments
+        // Find the view pager that will allow the user to swipe between fragments
         ViewPager viewPager = findViewById(R.id.viewpager);
 
 
@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         //   3. Set the tab layout's tab names with the view pager's adapter's titles
         //      by calling onPageTitle()
         tabLayout.setupWithViewPager(viewPager);
-
 
 
     }

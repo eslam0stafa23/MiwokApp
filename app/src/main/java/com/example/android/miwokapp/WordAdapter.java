@@ -17,13 +17,16 @@ import java.util.ArrayList;
  */
 public class WordAdapter extends ArrayAdapter<Word> {
 
+    //Resource ID for the background color for this list of words
     private int mColorResId;
+
 
     /**
      * Create a new {@link WordAdapter} object.
      *
      * @param context is the current context (i.e. Activity) that the adapter is being created in.
      * @param words   is the list of {@link Word}s to be displayed.
+     * @param colorResId is the resource ID for the background color for this list of words
      */
     public WordAdapter(Context context, ArrayList<Word> words, int colorResId) {
         super(context, 0, words);
@@ -64,13 +67,17 @@ public class WordAdapter extends ArrayAdapter<Word> {
             // set the image to iconView
             iconView.setImageResource(currentWord.getImageResId());
 
-        } else iconView.setVisibility(View.GONE);
+        } else {
+            // Otherwise hide the ImageView (set visibility to GONE)
+            iconView.setVisibility(View.GONE);
+        }
 
 
+        // Set the theme color for the list item
         View textContainer = listItemView.findViewById(R.id.textContainer);
-
+        // Find the color that the resource ID maps to
         int color = ContextCompat.getColor(getContext(), mColorResId);
-
+        // Set the background color of the text container View
         textContainer.setBackgroundColor(color);
 
 

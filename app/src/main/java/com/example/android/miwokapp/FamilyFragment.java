@@ -15,12 +15,15 @@ import java.util.ArrayList;
 public class FamilyFragment extends Fragment {
 
 
-    MediaPlayer mMediaPlayer;
+    //handles playing sound files of each word
+    private MediaPlayer mMediaPlayer;
 
 
+    //This listener gets triggered when the media player object has completed playing the audio file.
     private MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
+            // Now that the sound file has finished playing, release the media player resources.
             releaseMediaPlayer();
         }
     };
@@ -29,16 +32,19 @@ public class FamilyFragment extends Fragment {
         // Required empty public constructor
     }
 
+
+    /**
+     * Clean up the media player by releasing its resources.
+     */
     private void releaseMediaPlayer() {
         // If the media player is not null, then it may be currently playing a sound.
         if (mMediaPlayer != null) {
+
             // Regardless of the current state of the media player, release its resources
             // because we no longer need it.
             mMediaPlayer.release();
 
-            // Set the media player back to null. For our code, we've decided that
-            // setting the media player to null is an easy way to tell that the media player
-            // is not configured to play an audio file at the moment.
+            // Set the media player back to null.
             mMediaPlayer = null;
         }
     }
@@ -61,30 +67,44 @@ public class FamilyFragment extends Fragment {
         words.add(new Word("grandmother ", "ama", R.raw.family_grandmother, R.drawable.family_grandmother));
         words.add(new Word("grandfather", "paapa", R.raw.family_grandfather, R.drawable.family_grandfather));
 
-        // Create an {@link WordAdapter}, whose data source is a list of {@link Word}s. The
+// Create a WordAdapter, whose data source is a list of Words. The
         // adapter knows how to create list items for each item in the list.
         WordAdapter adapter = new WordAdapter(getActivity(), words, R.color.category_family);
 
-        // Find the {@link ListView} object in the view hierarchy of the {@link Activity}.
-        // There should be a {@link ListView} with the view ID called list, which is declared in the
+
+        // Find the ListView object in the view hierarchy of the Activity.
+        // There should be a ListView with the view ID called list, which is declared in the
         // word_list.xml layout file.
         ListView listView = rootView.findViewById(R.id.list);
 
-        // Make the {@link ListView} use the {@link WordAdapter} we created above, so that the
-        // {@link ListView} will display list items for each {@link Word} in the list.
+
+        // Make the ListView use the WordAdapter we created above, so that the
+        // ListView will display list items for each Word in the list.
         listView.setAdapter(adapter);
 
+
+        // Set a click listener to play the audio when the list item is clicked on
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Word word = words.get(position);
-
+                // Release the media player if it currently exists because we are about to
+                // play a different sound file
                 releaseMediaPlayer();
 
+                // Get the Word object at the given position the user clicked on
+                Word word = words.get(position);
+
+
+                // Create and setup the MediaPlayer for the audio resource associated
+                // with the current word
                 mMediaPlayer = MediaPlayer.create(getActivity(), word.getAudioResId());
+
+                // Start the audio file
                 mMediaPlayer.start();
 
+                // Setup a listener on the media player, so that we can stop and release the
+                // media player once the sound has finished playing.
                 mMediaPlayer.setOnCompletionListener(mCompletionListener);
 
 
@@ -96,6 +116,9 @@ public class FamilyFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+
+        // When the activity is stopped, release the media player resources because we won't
+        // be playing any more sounds.
         releaseMediaPlayer();
     }
 
